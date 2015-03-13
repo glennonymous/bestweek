@@ -7,6 +7,7 @@
     <script src="fsa-count-words.js"></script>
     <script src="app.js"></script>
     <script src="factories/TweetsFactory.js"></script>
+    <script src="factories/sentimentFactory.js"></script>
     <script src="controllers/MainController.js"></script>
     <script src="directives/tweet/tweet.js"></script>
 </head>
@@ -16,12 +17,16 @@
         <form name="getTweetsForm" ng-submit="getTweets(search.handle)">
             Handle: <input type="text" ng-model="search.handle" />
             <button type="submit">Get Tweets</button>
+            <button ng-click="getSentiment(search.handle)">Analyze Tweets</button>
         </form>
-        <button ng-click="analyzeTweets(tweets)" ng-show="tweets">Analyze Tweets</button>
-        <div ng-repeat="analyzedWord in analyzedWords | orderBy:'count':true">
-            <h4>{{ analyzedWord.word }}</h4>
-            <h5>{{ analyzedWord.count }}</h5>
+
+        <!--<h4>{{ sentiment }}</h4>-->
         </div>
+        <!--<button ng-click="analyzeTweets(tweets)" ng-show="tweets">Analyze Tweets</button>-->
+        <!--<div ng-repeat="analyzedWord in analyzedWords | orderBy:'count':true">-->
+            <!--<h4>{{ analyzedWord.word }}</h4>-->
+            <!--<h5>{{ analyzedWord.count }}</h5>-->
+        <!--</div>-->
         <tweet the-tweet="tweet" ng-repeat="tweet in tweets"></tweet>
     </div>
 
