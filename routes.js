@@ -1,5 +1,6 @@
 var router = require('express').Router(),
-	passport = require('passport');
+	passport = require('passport'),
+    AlchemyAPI = require('alchemy-api');
 
 // place this before any request handler
 // it will run first, and either continue to 
@@ -19,6 +20,8 @@ function isAuthenticated (req, res, next) {
 		next(err);
 	}
 }
+
+var alchemy = new AlchemyAPI('97ea261f6970ea411aaad0170e93cb183b6b9ceb');
 
 router.get('/', function (req, res) {
 	// only authenticated users get to witness the coolest
@@ -67,5 +70,13 @@ router.get('/auth/twitter', passport.authenticate('twitter'));
 router.get('/auth/twitter/callback', passport.authenticate('twitter'), function (req, res) {
 	res.redirect('/');
 });
+
+router.post('/alchemy', function(req, res) {
+    alchemy.sentiment(req.body.text, {}, function(err, response){
+        if (err) throw err;
+        var sentiment = response.docSentiment;
+        res.send(sentiment);
+    });
+})
 
 module.exports = router;
