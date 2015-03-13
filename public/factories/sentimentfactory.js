@@ -38,7 +38,7 @@ app.factory('sentimentFactory', function($http){
                 contentType:'json',
                 jsonpCallback:'callback',
                 data:{
-                    apikey:'97ea261f6970ea411aaad0170e93cb183b6b9ceb',
+                    apikey:'b03b4343f7bd9a9e836536404cefca5680beebc6',
                     text:tweets,
                     showSourceText:1,
                     jsonp:'callback',
