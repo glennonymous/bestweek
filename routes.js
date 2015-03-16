@@ -74,8 +74,8 @@ router.get('/auth/twitter/callback', passport.authenticate('twitter'), function 
 router.post('/alchemy', function(req, res) {
     alchemy.sentiment(req.body.text, {}, function(err, response){
         if (err) throw err;
-        var sentiment = response;
-        //var sentiment = response.docSentiment;
+        //var sentiment = response;
+        var sentiment = response.docSentiment;
         res.send(sentiment);
     });
 })

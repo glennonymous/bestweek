@@ -3,8 +3,10 @@ app.factory('sentimentFactory', function($http) {
 
 
     return {
+        // Creates an array of objects with the key 'month' and the key 'tweets', which is a concatenated string
+        // of all the user's tweets for that month.
         filterTweetTextByMonth: function (arr) {
-            var months = [Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec];
+            var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
             var month = null;
             var filteredTweets = [];
             var counter = -1;
@@ -27,7 +29,7 @@ app.factory('sentimentFactory', function($http) {
                 // increment the counter.
                 if (month === null || month !== monthOfCurrentObj) {
                     month = monthOfCurrentObj;
-                    filteredTweets = filteredTweets.push(new Tweet(monthOfCurrentObj, arr[obj].text))
+                    filteredTweets = filteredTweets.push(new Tweet(monthOfCurrentObj, (arr[obj].text + " ")))
                     counter++
                 }
                 // Otherwise, just concatenate the text of the tweet onto the object
@@ -35,6 +37,11 @@ app.factory('sentimentFactory', function($http) {
                 else {
                     filteredTweets[counter].tweets = filteredTweets[counter].tweets + arr[obj].text
                 }
+            }
+            console.log(filteredTweets);
+            // Finally, serialize the string of concatenated tweets on each object
+            for (var obj in filteredTweets) {
+                filteredTweets[obj].tweets = this.serialize(filteredTweets[obj].tweets)
             }
             return filteredTweets
         },
@@ -48,15 +55,23 @@ app.factory('sentimentFactory', function($http) {
             return str.join("&");
         },
 
-        getTextSentiment: function (twoots) {
-            console.log('into user factory', twoots);
-            var tweets = this.serializeTweets(twoots);
-            console.log('into user factory', tweets);
-            return $http.post('/alchemy', {
-                text: tweets,
-            }).then(function(response){
-                return response.data;
-            });
+        getTextSentiments: function (tweets) {
+            var filteredArr = this.filterTweetTextByMonth(tweets);
+            console.log(filteredArr);
+            var returnedArray = [];
+            //Object contructor
+            var scoreArray = function(month,data) {
+                this.month = month;
+                this.score = data;
+            }
+            for (var obj in filteredArr) {
+                return $http.post('/alchemy', {
+                    text: filteredArr[obj].tweets
+                }).then(function (response) {
+                    returnedArray = returnedArray.push(new scoreArray(filteredArr[obj].month,response.data));
+                    return returnedArray;
+                });
+            }
         }
     }
 });

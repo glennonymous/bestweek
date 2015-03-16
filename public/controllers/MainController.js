@@ -14,7 +14,7 @@ app.controller('MainController', function ($scope, TweetsFactory, sentimentFacto
             // Changing the following line temporarily to tweets.slice[0,25]
             // for testing purposes -- change it back for
             // all tweets
-            sentimentFactory.getTextSentiment(tweets.slice(0,12)).then(function (sentiment) {
+            sentimentFactory.getTextSentiments(tweets).then(function (sentiment) {
                $scope.sentiment = sentiment;
                 console.log(sentiment);
             });
